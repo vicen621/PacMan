@@ -6,7 +6,10 @@ import io.github.vicen621.board.Wall;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class PacMan extends AbstractTickablePiece {
+public class PacMan extends FacedPiece implements Tickable {
+    // Move speed calculation: 1 tile per (MOVE_SPEED * Board.DELAY)ms
+    private static final int MOVE_SPEED = 3;
+    private Face nextMove;
     private int score;
 
     public PacMan() {
