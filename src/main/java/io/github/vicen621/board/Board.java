@@ -93,6 +93,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // this method is called by the timer every DELAY ms.
         // use this space to update the state of your game or animation
         // before the graphics are redrawn.
+        checkWinCondition();
 
         // prevent the player from disappearing off the board
         pacMan.tick();
@@ -238,6 +239,13 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // remove collected power pellets from the board
         powerPellets.removeAll(collectedCoins);
+    }
+
+    private void checkWinCondition() {
+        if (coins.isEmpty() && powerPellets.isEmpty()) {
+            System.out.println("You win!");
+            System.exit(0);
+        }
     }
 
     /**
