@@ -20,7 +20,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     public static final int COLUMNS = 28;
     public static final int ROWS = 36;
     public static final int TUNNEL_ROW = 17;
-    // TODO: Falta hace toda la mitad de abajo del mapa y los cuadrados que se meten desde el borde de la parte de arriba
+    public static final Point STARTING_POINT = new Point(13, 26);
     public static final List<Wall> WALLS = List.of(
             // Top part of the map
             new Wall(new Point(2, 5), new Point(5, 7)), // Square upper left
@@ -36,8 +36,30 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             new Wall(new Point(13, 11), new Point(14, 13)), // Vertical T mid
             new Wall(new Point(9, 12), new Point(11, 13)), // Horizontal T left
             new Wall(new Point(16, 12), new Point(18, 13)), // Horizontal T right
-            new Wall(new Point(10, 15), new Point(17, 19)) // Ghost cage | Mid of the map
+            new Wall(new Point(0, 12), new Point(5, 16)), // Square Right
+            new Wall(new Point(22, 12), new Point(27, 16)), // Square Left
+            new Wall(new Point(10, 15), new Point(17, 19)), // Ghost cage | Mid of the map
             // Bottom part of the map
+            new Wall(new Point(0, 18), new Point(5, 22)), // Square up Right
+            new Wall(new Point(22, 18), new Point(27, 22)), // Square up Left
+            new Wall(new Point(7, 18), new Point(8, 22)), // Square upper left
+            new Wall(new Point(19, 18), new Point(20, 22)), // Square upper right
+            new Wall(new Point(10, 21), new Point(17, 22)), // Horizontal T mid
+            new Wall(new Point(13, 23), new Point(14, 25)), // Vertical T mid
+            new Wall(new Point(2, 24), new Point(5, 25)), // Horizontal L left
+            new Wall(new Point(4, 26), new Point(5, 28)), // Vertical T left
+            new Wall(new Point(7, 24), new Point(11, 25)), // square mid left
+            new Wall(new Point(16, 24), new Point(20, 25)), // square mid right
+            new Wall(new Point(22, 24), new Point(25, 25)), // Horizontal L right
+            new Wall(new Point(22, 26), new Point(23, 28)), // Vertical T right
+            new Wall(new Point(1, 27), new Point(2, 28)), // Square mid left
+            new Wall(new Point(10, 27), new Point(17, 28)), // Horizontal T mid
+            new Wall(new Point(13, 29), new Point(14, 31)), // Vertical T mid
+            new Wall(new Point(25, 27), new Point(26, 28)), // Square mid right
+            new Wall(new Point(7, 27), new Point(8, 29)), // Vertical T Left
+            new Wall(new Point(2, 30), new Point(11, 31)), // Horizontal T left
+            new Wall(new Point(19, 27), new Point(20, 29)), // Vertical T right
+            new Wall(new Point(16, 30), new Point(25, 31)) // Horizontal T right
     );
 
     private final PacMan pacMan;
