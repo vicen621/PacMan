@@ -3,9 +3,22 @@ package io.github.vicen621;
 import io.github.vicen621.board.Board;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.util.Objects;
 
 public class PacManGame {
     public static void main(String[] args) {
+        try {
+            GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .registerFont(Font.createFont(
+                            Font.TRUETYPE_FONT,
+                            Objects.requireNonNull(PacManGame.class.getResourceAsStream("/assets/fonts/arcade.ttf"))
+                    ));
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
         SwingUtilities.invokeLater(PacManGame::initWindow);
     }
 
