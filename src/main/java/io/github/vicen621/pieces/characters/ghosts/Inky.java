@@ -7,7 +7,7 @@ import java.awt.*;
 public class Inky extends AbstractGhost {
 
     public Inky(GhostManager ghostManager) {
-        super("/assets/characters/ghosts/inky/inky.gif", ghostManager);
+        super("/assets/characters/ghosts/inky/inky.gif", ghostManager, new Point(11, 17), 4);
     }
 
     @Override

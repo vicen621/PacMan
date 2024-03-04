@@ -7,7 +7,7 @@ import java.awt.*;
 public class Clyde extends AbstractGhost {
 
     public Clyde(GhostManager ghostManager) {
-        super("/assets/characters/ghosts/clyde/clyde.gif", ghostManager);
+        super("/assets/characters/ghosts/clyde/clyde.gif", ghostManager, new Point(15, 17), 6);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.vicen621.pieces.characters.ghosts;
 
+import io.github.vicen621.board.Board;
 import io.github.vicen621.pieces.characters.PacMan;
 
 import javax.swing.*;
@@ -33,6 +34,8 @@ public class GhostManager implements ActionListener {
 
         this.modeCounter = 0;
         this.waveCounter = 0;
+        this.frightenedCounter = 0;
+        this.ghostEatCounter = 0;
 
         this.ghostTimer = new Timer(1000, this);
         this.energizerTimer = new Timer(1000, this);
@@ -42,7 +45,7 @@ public class GhostManager implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(energizerTimer)) {
-            if (frightenedCounter < 5) {
+            if (frightenedCounter < Board.ENERGIZER_DURATION) {
                 frightenedCounter++;
                 return;
             }
@@ -50,14 +53,13 @@ public class GhostManager implements ActionListener {
             setMode(modeBeforeFrightened);
             this.frightenedCounter = 0;
             this.ghostEatCounter = 0;
+            Arrays.stream(this.ghosts).forEach(AbstractGhost::resetEaten);
             this.energizerTimer.stop();
             return;
         }
 
-        if (waveCounter == 4) {
-            System.out.println("Timer stopped");
+        if (waveCounter == 4)
             this.ghostTimer.stop();
-        }
 
         modeCounter++;
         switch (waveCounter) {
@@ -108,14 +110,35 @@ public class GhostManager implements ActionListener {
             return;
 
         for (AbstractGhost ghost : ghosts) {
-            if (ghost.getPos().equals(pacMan.getPos()) && ghost.isAlive()) {
-                ghost.setAlive(false);
+            if (ghost.getPos().equals(pacMan.getPos()) && ghost.isAlive() && !ghost.isEaten()) {
+                ghost.eat();
                 pacMan.addScore((int) (Math.pow(2, ghostEatCounter + 1) * 100));
-                    ghost.getTarget().setLocation(new Point(14, 14));
             }
         }
+    }
 
-        // ghost cage door =
+    public void resetGhosts() {
+        this.mode = GhostMode.SCATTER;
+        this.modeCounter = 0;
+        this.waveCounter = 0;
+        this.frightenedCounter = 0;
+        this.ghostEatCounter = 0;
+
+        Arrays.stream(this.ghosts).forEach(AbstractGhost::reset);
+        this.energizerTimer.stop();
+        this.ghostTimer.stop();
+
+        this.ghostTimer.start();
+    }
+
+    // Blinky no me mata
+    public boolean checkDeath() {
+        for (AbstractGhost ghost : ghosts) {
+            if (ghost.getPos().equals(pacMan.getPos()) && ghost.isAlive())
+                return true;
+        }
+
+        return false;
     }
 
     public Blinky getBlinky() {

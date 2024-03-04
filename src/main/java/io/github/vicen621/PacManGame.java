@@ -24,7 +24,7 @@ public class PacManGame {
 
     public static void initWindow() {
         // create a window frame and set the title in the toolbar
-        JFrame frame = new JFrame("PacMan");
+        JFrame frame = new JFrame("Pac-Man");
         // when we close the window, stop the app
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

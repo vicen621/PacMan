@@ -1,6 +1,7 @@
 package io.github.vicen621.board;
 
 import io.github.vicen621.pieces.AbstractPiece;
+import io.github.vicen621.pieces.characters.ghosts.AbstractGhost;
 import io.github.vicen621.pieces.characters.ghosts.GhostManager;
 import io.github.vicen621.pieces.coins.Coin;
 import io.github.vicen621.pieces.characters.PacMan;
@@ -25,6 +26,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     public static final int COLUMNS = 28;
     public static final int ROWS = 36;
     public static final int TUNNEL_ROW = 17;
+    public static final int ENERGIZER_DURATION = 6;
     public static final Point STARTING_POINT = new Point(13, 26);
     public static final List<Wall> WALLS = List.of(
             // Top part of the map
@@ -43,7 +45,10 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             new Wall(new Point(16, 12), new Point(18, 13)), // Horizontal T right
             new Wall(new Point(0, 12), new Point(5, 16)), // Square Right
             new Wall(new Point(22, 12), new Point(27, 16)), // Square Left
-            new Wall(new Point(10, 15), new Point(17, 19)), // Ghost cage | Mid of the map
+            new Wall(new Point(10, 15), new Point(10, 19)), // Ghost cage left
+            new Wall(new Point(11, 15), new Point(16, 15)), // Ghost cage top
+            new Wall(new Point(11, 19), new Point(16, 19)), // Ghost cage bottom
+            new Wall(new Point(17, 15), new Point(17, 19)), // Ghost cage right
             // Bottom part of the map
             new Wall(new Point(0, 18), new Point(5, 22)), // Square up Right
             new Wall(new Point(22, 18), new Point(27, 22)), // Square up Left
@@ -103,6 +108,10 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // use this space to update the state of your game or animation
         // before the graphics are redrawn.
         checkWinCondition();
+        if (ghostManager.checkDeath()) {
+            pacMan.kill();
+            ghostManager.resetGhosts();
+        }
 
         ghostManager.tickGhosts();
         // prevent the player from disappearing off the board
@@ -303,7 +312,6 @@ public class Board extends JPanel implements ActionListener, KeyListener {
      * @return true if the point is within the bounds of any wall
      */
     public static boolean checkCollision(Point point) {
-        // Wall ghostCageDoor = new Wall(new Point(14, 15), new Point(15, 15));
         // prevent the player from moving off the edge of the board vertically
         if (point.y <= 3 || point.y >= Board.ROWS - 3)
             return true;

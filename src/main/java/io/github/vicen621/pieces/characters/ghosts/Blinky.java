@@ -5,7 +5,7 @@ import java.awt.*;
 public class Blinky extends AbstractGhost {
 
     public Blinky(GhostManager ghostManager) {
-        super("/assets/characters/ghosts/blinky/blinky.gif", ghostManager);
+        super("/assets/characters/ghosts/blinky/blinky.gif", ghostManager, new Point(13, 14), 0);
     }
 
     @Override

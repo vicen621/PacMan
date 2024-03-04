@@ -13,6 +13,7 @@ public class PacMan extends FacedPiece implements Tickable {
     private Face nextMove;
     private int score;
     private int moveCounter;
+    private int lives;
 
     public PacMan() {
         super("/assets/characters/pacman/pacman.gif");
@@ -20,6 +21,7 @@ public class PacMan extends FacedPiece implements Tickable {
         this.nextMove = getFace();
         this.score = 0;
         this.moveCounter = 0;
+        this.lives = 2;
         getPos().setLocation(Board.STARTING_POINT);
     }
 
@@ -69,6 +71,24 @@ public class PacMan extends FacedPiece implements Tickable {
 
         if (Board.checkCollision(getPos()))
             getPos().setLocation(pos);
+    }
+
+    public void kill() {
+        if (lives == 0) {
+            System.out.println("You lost!");
+            System.exit(0);
+            return;
+        }
+
+        lives -= 1;
+        reset();
+    }
+
+    private void reset() {
+        getPos().setLocation(Board.STARTING_POINT);
+        setFace(Face.UP);
+        nextMove = getFace();
+        moveCounter = 0;
     }
 
     public String getScore() {
