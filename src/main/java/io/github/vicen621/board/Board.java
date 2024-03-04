@@ -1,9 +1,10 @@
 package io.github.vicen621.board;
 
 import io.github.vicen621.pieces.AbstractPiece;
+import io.github.vicen621.pieces.characters.ghosts.GhostManager;
 import io.github.vicen621.pieces.coins.Coin;
 import io.github.vicen621.pieces.characters.PacMan;
-import io.github.vicen621.pieces.coins.PowerPellet;
+import io.github.vicen621.pieces.coins.Energizer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -65,13 +66,16 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             new Wall(new Point(19, 27), new Point(20, 29)), // Vertical T right
             new Wall(new Point(16, 30), new Point(25, 31)) // Horizontal T right
     );
+    private static Board instance;
 
     private final PacMan pacMan;
     private final Timer timer;
+    private final GhostManager ghostManager;
     private final List<AbstractPiece> coins;
-    private final List<PowerPellet> powerPellets;
+    private final List<Energizer> energizers;
 
     public Board() {
+        instance = this;
         // set the game board size
         setPreferredSize(new Dimension(TILE_SIZE * COLUMNS, TILE_SIZE * ROWS));
         // set the game board background color
@@ -80,12 +84,17 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // initialize the game state
         pacMan = new PacMan();
         coins = new ArrayList<>();
-        powerPellets = new ArrayList<>();
+        energizers = new ArrayList<>();
+        ghostManager = new GhostManager(pacMan);
         populateCoins();
 
         // this timer will call the actionPerformed() method every DELAY ms
         timer = new Timer(DELAY, this);
         timer.start();
+    }
+
+    public static Board getInstance() {
+        return instance;
     }
 
     @Override
@@ -95,12 +104,14 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // before the graphics are redrawn.
         checkWinCondition();
 
+        ghostManager.tickGhosts();
         // prevent the player from disappearing off the board
         pacMan.tick();
 
         // give the player points for collecting coins
         collectCoins();
         collectPowerPellets();
+        ghostManager.eatGhosts();
 
         // calling repaint() will trigger paintComponent() to run again,
         // which will refresh/redraw the graphics.
@@ -133,10 +144,11 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             coin.draw(g, this);
         }
 
-        for (PowerPellet powerPellet : powerPellets) {
-            powerPellet.draw(g, this);
+        for (Energizer energizer : energizers) {
+            energizer.draw(g, this);
         }
 
+        ghostManager.drawGhosts(g, this);
         pacMan.draw(g, this);
 
         // this smooths out animations on some systems
@@ -171,10 +183,10 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     }
 
     private void populateCoins() {
-        powerPellets.add(new PowerPellet(new Point(1, 6)));
-        powerPellets.add(new PowerPellet(new Point(1, 26)));
-        powerPellets.add(new PowerPellet(new Point(26, 6)));
-        powerPellets.add(new PowerPellet(new Point(26, 26)));
+        energizers.add(new Energizer(new Point(1, 6)));
+        energizers.add(new Energizer(new Point(1, 26)));
+        energizers.add(new Energizer(new Point(26, 6)));
+        energizers.add(new Energizer(new Point(26, 26)));
 
         for (int y = 4; y < ROWS - 3; y++) {
             for (int x = 1; x < COLUMNS - 1; x++) {
@@ -198,8 +210,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             return false; // Ghost cage
 
         // Power pellets
-        for (PowerPellet powerPellet : powerPellets) {
-            if (pos.equals(powerPellet.getPos()))
+        for (Energizer energizer : energizers) {
+            if (pos.equals(energizer.getPos()))
                 return false;
         }
 
@@ -227,22 +239,24 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
     private void collectPowerPellets() {
         // allow player to pickup power pellets
-        ArrayList<PowerPellet> collectedCoins = new ArrayList<>();
-        for (PowerPellet powerPellet : powerPellets) {
+        ArrayList<Energizer> collectedCoins = new ArrayList<>();
+        for (Energizer energizer : energizers) {
             // if the player is on the same tile as a power pellet, collect it
-            if (pacMan.getPos().equals(powerPellet.getPos())) {
+            if (pacMan.getPos().equals(energizer.getPos())) {
+                // Change the mode of the ghosts to frightened
+                ghostManager.setMode(GhostManager.GhostMode.FRIGHTENED);
                 // give the player some points for picking this up
-                pacMan.addScore(100);
-                collectedCoins.add(powerPellet);
+                pacMan.addScore(50);
+                collectedCoins.add(energizer);
             }
         }
 
         // remove collected power pellets from the board
-        powerPellets.removeAll(collectedCoins);
+        energizers.removeAll(collectedCoins);
     }
 
     private void checkWinCondition() {
-        if (coins.isEmpty() && powerPellets.isEmpty()) {
+        if (coins.isEmpty() && energizers.isEmpty()) {
             System.out.println("You win!");
             System.exit(0);
         }
@@ -282,12 +296,14 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         g2d.drawString(text, x, y);
     }
 
+    // TODO: Check if a ghost is in cage and if so let it go out
     /**
      * Check if the given point is within the bounds of any wall
      * @param point the point to check
      * @return true if the point is within the bounds of any wall
      */
     public static boolean checkCollision(Point point) {
+        // Wall ghostCageDoor = new Wall(new Point(14, 15), new Point(15, 15));
         // prevent the player from moving off the edge of the board vertically
         if (point.y <= 3 || point.y >= Board.ROWS - 3)
             return true;
@@ -303,5 +319,10 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         }
 
         return false;
+    }
+
+
+    public GhostManager getGhostManager() {
+        return ghostManager;
     }
 }

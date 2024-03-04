@@ -19,17 +19,24 @@ public abstract class FacedPiece extends AbstractPiece {
         this.images = new Image[Face.values().length];
         this.face = Face.UP;
 
-        this.loadImages(imagePath);
+        this.loadImages(imagePath, images);
     }
 
-    public void loadImages(final String imagePath) {
+    public void loadImages(final String imagePath, Image[] images) {
         for (Face face : Face.values()) {
-            String path = imagePath.replace(".gif", "_" + face.name().toLowerCase() + ".gif");
-            URL url = getClass().getResource(path);
-            assert url != null;
+            String path = imagePath
+                    .replace(".gif", "_" + face.name().toLowerCase() + ".gif")
+                    .replace(".png", "_" + face.name().toLowerCase() + ".png");
 
-            images[face.ordinal()] = new ImageIcon(url).getImage();
+            images[face.ordinal()] = loadImage(path);
         }
+    }
+
+    public Image loadImage(final String imagePath) {
+        URL url = getClass().getResource(imagePath);
+        assert url != null;
+
+        return new ImageIcon(url).getImage();
     }
 
     @Override
@@ -39,11 +46,15 @@ public abstract class FacedPiece extends AbstractPiece {
         // this is also where we translate board grid position into a canvas pixel
         // position by multiplying by the tile size.
         g.drawImage(
-                images[face.ordinal()],
+                getImage(),
                 getPos().x * Board.TILE_SIZE,
                 getPos().y * Board.TILE_SIZE,
                 observer
         );
+    }
+
+    public Image getImage() {
+        return images[face.ordinal()];
     }
 
     public Face getFace() {
@@ -66,6 +77,17 @@ public abstract class FacedPiece extends AbstractPiece {
         Face(int dx, int dy) {
             this.dx = dx;
             this.dy = dy;
+        }
+
+        public Face getOpposite() {
+            switch (this) {
+                case UP -> { return DOWN; }
+                case RIGHT -> { return LEFT; }
+                case DOWN -> { return UP; }
+                case LEFT -> { return RIGHT; }
+            }
+
+            return null;
         }
     }
 }

@@ -17,8 +17,8 @@ Currently, I'm adding the ghosts to the game. The way it will work is that the g
 ### Ghosts
 There are 4 ghosts:
 * Blinky - Red: The most aggressive ghost, it will always try to move to the Pacman position. Scatter: (25, 0)
-* Pinky - Pink: The most strategic ghost, it will try to move to a position 4 tiles in front of the Pacman. Scatter: (2, 0). Target in chase mode: 2 * (Intermediate Position) - Blinky Position
-* Inky - Cyan: The most unpredictable ghost. Get the tile 2 tiles in front of pacman, then draw a vector from blinky to that tile, and double the length of the vector. The result is the target tile. Scatter: (0, 35)
+* Pinky - Pink: The most strategic ghost, it will try to move to a position 4 tiles in front of the Pacman. Scatter: (2, 0)
+* Inky - Cyan: The most unpredictable ghost. Get the tile 2 tiles in front of pacman, then draw a vector from blinky to that tile, and double the length of the vector. The result is the target tile. Scatter: (0, 35). Target in chase mode: 2 * (Intermediate Position) - Blinky Position
 * Clyde - Yellow: The most passive ghost, it will try to move to the Pacman position, but if it gets too close, the target tile changes to the same in scatter mode. Scatter: (27, 35). If sqrDistamce > 64, target = Pacman. Else, target = Scatter.
 
 #### Ghost modes
@@ -45,7 +45,3 @@ Cant move through walls, and the target tile is the closest to the target point.
 To define which tile is the closest to the target point I should use a distance squared algorithm. If two tiles ties in distance the ghost chooses by the following order: Up, Left, Down, Right.
 
 Also, the ghosts can't move to the opposite direction of the current direction.
-
-#### Distance Squared Algorithm
-
-(target x -  adjacent x)^2 + (target y - adjacent y)^2

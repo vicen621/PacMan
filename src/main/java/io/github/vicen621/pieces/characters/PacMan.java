@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 
 public class PacMan extends FacedPiece implements Tickable {
     // Move speed calculation: 1 tile per (MOVE_SPEED * Board.DELAY)ms
-    private static final int MOVE_SPEED = 3;
+    private static final int MOVE_SPEED = 5;
     private Face nextMove;
     private int score;
     private int moveCounter;
@@ -47,7 +47,9 @@ public class PacMan extends FacedPiece implements Tickable {
         if (this.moveCounter < MOVE_SPEED)
             return;
 
-        Point pos = (Point) getPos().clone();
+        this.moveCounter = 0;
+
+        Point pos = new Point(getPos());
         getPos().translate(nextMove.dx, nextMove.dy);
 
         if (!Board.checkCollision(getPos()))
@@ -67,8 +69,6 @@ public class PacMan extends FacedPiece implements Tickable {
 
         if (Board.checkCollision(getPos()))
             getPos().setLocation(pos);
-
-        this.moveCounter = 0;
     }
 
     public String getScore() {
