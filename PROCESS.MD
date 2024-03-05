@@ -45,3 +45,15 @@ Cant move through walls, and the target tile is the closest to the target point.
 To define which tile is the closest to the target point I should use a distance squared algorithm. If two tiles ties in distance the ghost chooses by the following order: Up, Left, Down, Right.
 
 Also, the ghosts can't move to the opposite direction of the current direction.
+
+## Fourth day - 2024-03-05 (Tuesday, March 5)
+
+There are a few things that I need to do in the next days
+* Add the lives to the game window
+* Add the game over screen
+* Add the win screen
+* Add the death animation for the Pacman
+* See why sometimes pac-man don't eat the ghosts
+* Add levels? (I don't know if I will do this)
+* Add the fruits
+* Add the sound effects
