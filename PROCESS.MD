@@ -54,6 +54,7 @@ There are a few things that I need to do in the next days
 * Add the win screen
 * Add the death animation for the Pacman
 * See why sometimes pac-man don't eat the ghosts
+* See why ghost don't leave panic mode
 * Add levels? (I don't know if I will do this)
 * Add the fruits
 * Add the sound effects
